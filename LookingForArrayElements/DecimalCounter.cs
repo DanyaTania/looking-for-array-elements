@@ -22,12 +22,33 @@ namespace LookingForArrayElements
                 throw new ArgumentNullException(nameof(ranges));
             }
 
-            if (arrayToSearch.Length == 0)
+            for (int k = 0; k < ranges.Length; k++)
+            {
+                if (ranges[k] is null)
+                {
+                    throw new ArgumentNullException(nameof(ranges));
+                }
+            }
+
+            if (ranges.Length == 0)
             {
                 return 0;
             }
 
-            if (ranges.Length == 0)
+            for (int k = 0; k < ranges.Length - 1; k++)
+            {
+                if (ranges[k] is null)
+                {
+                    throw new ArgumentNullException(nameof(ranges));
+                }
+
+                if (ranges[k].Length > 2 || ranges.GetLength(k) > 2 || ranges[k].Length < 2 || ranges.GetLength(k) < 2)
+                {
+                    throw new ArgumentException("the length of one of the ranges is less or greater than 2");
+                }
+            }
+
+            if (arrayToSearch.Length == 0)
             {
                 return 0;
             }
@@ -39,14 +60,14 @@ namespace LookingForArrayElements
                 for (int i = 0; i < ranges[k].Length; i++)
                 {
                     if (Array.IndexOf(arrayToSearch, ranges[k][i]) >= 0)
-                {
-                    arrayResult[res] += 1;
-                    res++;
+                    {
+                        arrayResult[res] += 1;
+                        res++;
+                    }
                 }
             }
-            }
 
-            return CountOfFoundElements(arrayResult);
+            return Counter.CountOfFoundElements(arrayResult);
         }
 
         /// <summary>
@@ -67,6 +88,14 @@ namespace LookingForArrayElements
             if (ranges is null)
             {
                 throw new ArgumentNullException(nameof(ranges));
+            }
+
+            for (int k = 0; k < ranges.Length; k++)
+            {
+                if (ranges[k] is null)
+                {
+                    throw new ArgumentNullException(nameof(ranges));
+                }
             }
 
             if (startIndex < 0)
@@ -94,6 +123,11 @@ namespace LookingForArrayElements
                 throw new ArgumentNullException(nameof(count), "startIndex + count > arrayToSearch.Length");
             }
 
+            if (arrayToSearch.Length == 0)
+            {
+                return 0;
+            }
+
             int lastPosition = startIndex + count;
             if (lastPosition > arrayToSearch.Length)
             {
@@ -114,46 +148,7 @@ namespace LookingForArrayElements
                 }
             }
 
-            return CountOfFoundElements(arrayResult, startIndex, count);
-        }
-
-        public static int CountOfFoundElements(int[] arrayResult)
-        {
-            int result = 0;
-            if (arrayResult is null)
-            {
-                throw new ArgumentNullException(nameof(arrayResult));
-            }
-
-            for (int i = 0; i < arrayResult.Length; i++)
-            {
-                if (arrayResult[i] > 0)
-                {
-                    result += arrayResult[i];
-                }
-            }
-
-            return result;
-        }
-
-        public static int CountOfFoundElements(int[] arrayResult, int startIndex, int count)
-        {
-            int result = 0;
-            if (arrayResult is null)
-            {
-                throw new ArgumentNullException(nameof(arrayResult));
-            }
-
-            int lastPosition = startIndex + count;
-            for (int i = startIndex; i < lastPosition; i++)
-            {
-                if (arrayResult[i] > 0)
-                {
-                    result += arrayResult[i];
-                }
-            }
-
-            return result;
+            return Counter.CountOfFoundElements(arrayResult);
         }
     }
 }

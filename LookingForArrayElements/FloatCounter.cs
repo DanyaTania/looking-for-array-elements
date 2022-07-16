@@ -85,7 +85,7 @@ namespace LookingForArrayElements
                 }
             }
 
-            return CountOfFoundElements(arrayResult);
+            return Counter.CountOfFoundElements(arrayResult);
         }
 
         /// <summary>
@@ -194,46 +194,7 @@ namespace LookingForArrayElements
             }
             while (i < arrayToSearch.Length - 1);
 
-            return CountOfFoundElements(arrayResult, startIndex, count);
-        }
-
-        public static int CountOfFoundElements(byte[] arrayResult)
-        {
-            int result = 0;
-            if (arrayResult is null)
-            {
-                throw new ArgumentNullException(nameof(arrayResult));
-            }
-
-            for (int i = 0; i < arrayResult.Length; i++)
-            {
-                if (arrayResult[i] > 0)
-                {
-                    result += arrayResult[i];
-                }
-            }
-
-            return result;
-        }
-
-        public static int CountOfFoundElements(byte[] arrayResult, int startIndex, int count)
-        {
-            int result = 0;
-            if (arrayResult is null)
-            {
-                throw new ArgumentNullException(nameof(arrayResult));
-            }
-
-            int lastPosition = startIndex + count;
-            for (int i = startIndex; i < lastPosition; i++)
-            {
-                if (arrayResult[i] > 0)
-                {
-                    result += arrayResult[i];
-                }
-            }
-
-            return result;
+            return Counter.CountOfFoundElements(arrayResult, startIndex, count);
         }
     }
 }
