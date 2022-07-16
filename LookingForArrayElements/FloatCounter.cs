@@ -13,79 +13,10 @@ namespace LookingForArrayElements
         /// <returns>The number of occurrences of the <see cref="Array"/> elements that match the range criteria.</returns>
         public static int GetFloatsCount(float[] arrayToSearch, float[] rangeStart, float[] rangeEnd)
         {
-            if (rangeStart == null || rangeEnd is null)
-            {
-                throw new ArgumentNullException(nameof(arrayToSearch));
-            }
+            int startIndex = 0;
+            int count = arrayToSearch.Length;
 
-            if (arrayToSearch == null)
-            {
-                throw new ArgumentNullException(nameof(arrayToSearch));
-            }
-
-            if (rangeStart.Length == 0 && rangeEnd.Length == 0)
-            {
-                return 0;
-            }
-
-            if (rangeStart.Length != rangeEnd.Length)
-            {
-                throw new ArgumentException("arrays of range starts and range ends contain different number of elements");
-            }
-
-            if (rangeStart[0] > rangeEnd[0])
-            {
-                throw new ArgumentException("range start value is greater than the range end value");
-            }
-
-            if (arrayToSearch.Length == 0)
-            {
-                return 0;
-            }
-
-            if (arrayToSearch.Length < rangeStart.Length || arrayToSearch.Length < rangeEnd.Length)
-            {
-                throw new ArgumentOutOfRangeException(nameof(arrayToSearch));
-            }
-
-            byte[] arrayResult = new byte[arrayToSearch.Length];
-
-            float[] elementsToSearchFor = new float[arrayToSearch.Length];
-            for (int i = 0; i < arrayToSearch.Length - 1; i++)
-            {
-                for (int j = 0; j < rangeStart.Length; j++)
-                {
-                    if (arrayToSearch[i] == rangeStart[j])
-                    {
-                        elementsToSearchFor[i] = rangeStart[j];
-                        arrayResult[i] += 1;
-                    }
-                    else
-                    {
-                        arrayResult[i] = 0;
-                    }
-
-                    if (arrayToSearch[i + 1] == rangeEnd[j])
-                    {
-                        elementsToSearchFor[i + 1] = rangeStart[j];
-                        arrayResult[i] = 1;
-                    }
-                    else
-                    {
-                        arrayResult[i] = 0;
-                    }
-                }
-            }
-
-            for (int j = 0; j < arrayToSearch.Length - 1; j++)
-            {
-                if (Array.IndexOf(arrayToSearch, elementsToSearchFor[j]) >= 0)
-                {
-                    arrayResult[j] += 1;
-                }
-            }
-
-            return Counter.CountOfFoundElements(arrayResult);
+            return GetFloatsCount(arrayToSearch, rangeStart, rangeEnd, startIndex, count);
         }
 
         /// <summary>
@@ -134,9 +65,10 @@ namespace LookingForArrayElements
                 throw new ArgumentOutOfRangeException(nameof(count), "count is less than zero");
             }
 
-            if (startIndex + count > arrayToSearch.Length)
+            int lastPosition = startIndex + count;
+            if (lastPosition > arrayToSearch.Length)
             {
-                throw new ArgumentNullException(nameof(count));
+                throw new ArgumentOutOfRangeException(nameof(count), "startIndex + count > arrayToSearch.Length");
             }
 
             if (arrayToSearch.Length == 0)
@@ -144,55 +76,42 @@ namespace LookingForArrayElements
                 return 0;
             }
 
-            int lastPosition = startIndex + count;
-            if (lastPosition > arrayToSearch.Length)
-            {
-                throw new ArgumentOutOfRangeException(nameof(count), "startIndex + count > arrayToSearch.Length");
-            }
+            int[] arrayResult = new int[arrayToSearch.Length];
 
-            byte[] arrayResult = new byte[arrayToSearch.Length];
-            int i = 0;
-            do
+            float[] elementsToSearchFor = new float[arrayToSearch.Length];
+            for (int i = 0; i < arrayToSearch.Length - 1; i++)
             {
-                int j = 0;
-
-                do
+                for (int j = 0; j < rangeStart.Length; j++)
                 {
                     if (arrayToSearch[i] == rangeStart[j])
                     {
+                        elementsToSearchFor[i] = rangeStart[j];
                         arrayResult[i] += 1;
+                    }
+                    else
+                    {
+                        arrayResult[i] = 0;
                     }
 
                     if (arrayToSearch[i + 1] == rangeEnd[j])
                     {
-                        arrayResult[i] += 1;
+                        elementsToSearchFor[i + 1] = rangeStart[j];
+                        arrayResult[i] = 1;
                     }
-
-                    j += 1;
-                }
-                while (j < rangeStart.Length - 1);
-
-                i += 1;
-            }
-            while (i < arrayToSearch.Length - 1);
-
-            do
-            {
-                int j = 0;
-
-                do
-                {
-                    if (arrayToSearch[i] == rangeEnd[j])
+                    else
                     {
-                        arrayResult[i]++;
+                        arrayResult[i] = 0;
                     }
-
-                    j++;
                 }
-                while (j < rangeEnd.Length - 1);
-                i++;
             }
-            while (i < arrayToSearch.Length - 1);
+
+            for (int j = 0; j < arrayToSearch.Length - 1; j++)
+            {
+                if (Array.IndexOf(arrayToSearch, elementsToSearchFor[j]) >= 0)
+                {
+                    arrayResult[j] += 1;
+                }
+            }
 
             return Counter.CountOfFoundElements(arrayResult, startIndex, count);
         }
